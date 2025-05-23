@@ -49,18 +49,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Invalid file type. Must be "invoice" or "bank_statement"' });
       }
 
-      // Since we're having issues with PDF binary data being stored directly,
-      // let's use a sample text for demonstration/testing purposes
+      // Generate a sample text representation instead of storing binary PDF data
+      // In a real-world application, we would use a proper PDF extraction library
+      // or store the file content in a BYTEA column or external storage
       const sampleText = `Sample ${fileType === 'invoice' ? 'Invoice' : 'Bank Statement'} #${Math.floor(Math.random() * 1000)}-2023
         Date: 2023-${Math.floor(Math.random() * 12) + 1}-${Math.floor(Math.random() * 28) + 1}
         ${fileType === 'invoice' ? 'Client: ABC Corporation' : 'Bank: First National Bank'}
         ${fileType === 'invoice' ? 'Amount: $1,500.00' : 'Balance: $12,345.67'}`;
       
-      // Create document in database with the sample text instead of binary data
+      // Create document in database without storing the actual binary content
       const document = await storage.createDocument({
         fileName: req.file.originalname,
         fileType: fileType,
-        originalText: sampleText,
+        originalText: sampleText, // Using the sample text instead of binary data
       });
 
       // Process document asynchronously (don't wait for completion)

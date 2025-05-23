@@ -13,8 +13,8 @@ export const uploadDocument = async (file: File, fileType: 'invoice' | 'bank_sta
   });
   
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Upload failed: ${errorText}`);
+    const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
+    throw new Error(errorData.message || 'Upload failed');
   }
   
   return response.json();
